@@ -1,0 +1,211 @@
+<Window x:Class="ERARQ_Urb.ERARQWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ERARQ-Urb: Herramientas Urbanísticas" 
+        Height="550" Width="700"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="#F0F0F0">
+    
+    <Window.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gray" CornerRadius="4,4,0,0" Margin="2,0,2,0">
+                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#E0E0E0" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <TabControl>
+            <!-- Pestaña 1: Configuración General -->
+            <TabItem Header="⚙️ Configuración">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <GroupBox Header="Parámetros de Dibujo" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Escala Plot:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtScale" Text="1000" Margin="5"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Altura Texto:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtTextHeight" Text="2.5" Margin="5"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Precisión Área:" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cmbAreaPrecision" SelectedIndex="2" Margin="5">
+                                    <ComboBoxItem Content="0 decimales"/>
+                                    <ComboBoxItem Content="1 decimal"/>
+                                    <ComboBoxItem Content="2 decimales"/>
+                                    <ComboBoxItem Content="3 decimales"/>
+                                </ComboBox>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Unidad Área:" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="cmbAreaUnit" SelectedIndex="0" Margin="5">
+                                    <ComboBoxItem Content="m²"/>
+                                    <ComboBoxItem Content="Hectáreas"/>
+                                </ComboBox>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="Capas (Layers)" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Polígono:"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtLayerPoly" Text="E-TOPO" Margin="5"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Texto:"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtLayerText" Text="E-TEXT" Margin="5"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Tabla:"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtLayerTable" Text="E-TABLA" Margin="5"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <Button x:Name="btnSaveConfig" Content="💾 Guardar Configuración" Click="BtnSaveConfig_Click" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Pestaña 2: Tablas Técnicas -->
+            <TabItem Header="📊 Tablas">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Seleccione el tipo de tabla a generar:" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <WrapPanel>
+                        <Button x:Name="btnTableSimple" Content="Simple (Área/Perímetro)" Width="180" Click="BtnTableSimple_Click"/>
+                        <Button x:Name="btnTableRumbos" Content="Rumbos y Distancias" Width="180" Click="BtnTableRumbos_Click"/>
+                        <Button x:Name="btnTableAngles" Content="Ángulos Internos" Width="180" Click="BtnTableAngles_Click"/>
+                        <Button x:Name="btnTableMix" Content="Mixta Completa" Width="180" Click="BtnTableMix_Click"/>
+                    </WrapPanel>
+                    <Separator Margin="0,15"/>
+                    <TextBlock Text="Opciones de Inserción:" Margin="0,10,0,5"/>
+                    <CheckBox x:Name="chkTableAutoPlace" Content="Ubicación Automática (Sin superposición)" IsChecked="True"/>
+                    <CheckBox x:Name="chkTableIncludeSum" Content="Incluir Sumatorias Totales" IsChecked="True"/>
+                </StackPanel>
+            </TabItem>
+
+            <!-- Pestaña 3: División de Polígonos -->
+            <TabItem Header="✂️ División">
+                <StackPanel Margin="10">
+                    <RadioButton x:Name="radDivEqual" Content="Dividir en N partes iguales" GroupName="DivType" IsChecked="True" Margin="0,0,0,5"/>
+                    <Grid Margin="20,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Número de Lotes:" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="txtDivCount" Text="2" Width="100" HorizontalAlignment="Left"/>
+                    </Grid>
+
+                    <RadioButton x:Name="radDivArea" Content="Dividir por Área Específica" GroupName="DivType" Margin="0,0,0,5"/>
+                    <Grid Margin="20,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Área Objetivo:" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="txtDivArea" Text="500" Width="100" HorizontalAlignment="Left"/>
+                    </Grid>
+
+                    <GroupBox Header="Método de Corte" Margin="0,10">
+                        <StackPanel>
+                            <RadioButton x:Name="radCutParallel" Content="Paralelo a un lado" IsChecked="True"/>
+                            <RadioButton x:Name="radCutPerpendicular" Content="Perpendicular a un lado"/>
+                            <RadioButton x:Name="radCutAngle" Content="Con ángulo fijo"/>
+                            <Grid Margin="10,5,0,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Ángulo Corte:"/>
+                                <TextBox Grid.Column="1" x:Name="txtCutAngle" Text="90" Width="60" IsEnabled="False"/>
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <Button x:Name="btnExecuteDivide" Content="▶ Ejecutar División" Click="BtnExecuteDivide_Click" Height="40" FontSize="14"/>
+                </StackPanel>
+            </TabItem>
+
+            <!-- Pestaña 4: Grilla y Etiquetado -->
+            <TabItem Header="🏷️ Grilla & Etiquetas">
+                <StackPanel Margin="10">
+                    <GroupBox Header="Generar Grilla" Margin="0,0,0,10">
+                        <StackPanel>
+                            <CheckBox x:Name="chkGridAuto" Content="Detección Automática de Límites"/>
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="txtGridX" Text="10" Margin="2"/>
+                                <TextBox Grid.Column="1" x:Name="txtGridY" Text="10" Margin="2"/>
+                            </Grid>
+                            <TextBlock Text="Espaciamiento X / Y" FontStyle="Italic" FontSize="10" Foreground="Gray"/>
+                            <Button x:Name="btnCreateGrid" Content="Crear Grilla" Click="BtnCreateGrid_Click" Margin="0,5"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Etiquetado Masivo">
+                        <WrapPanel>
+                            <Button x:Name="btnLabelVerts" Content="Numerar Vértices" Width="140" Click="BtnLabelVerts_Click"/>
+                            <Button x:Name="btnLabelLots" Content="Numerar Lotes" Width="140" Click="BtnLabelLots_Click"/>
+                            <Button x:Name="btnLabelAreas" Content="Etiquetar Áreas" Width="140" Click="BtnLabelAreas_Click"/>
+                            <Button x:Name="btnLabelCoords" Content="Coordenadas XY" Width="140" Click="BtnLabelCoords_Click"/>
+                        </WrapPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <!-- Pestaña 5: Exportar -->
+            <TabItem Header="📤 Exportar">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Exportar datos a CSV (Excel compatible):" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <CheckBox x:Name="chkExpCoords" Content="Coordenadas de Vértices" IsChecked="True" Margin="0,5"/>
+                    <CheckBox x:Name="chkExpSides" Content="Distancias y Rumbos por Lado" IsChecked="True" Margin="0,5"/>
+                    <CheckBox x:Name="chkExpAreas" Content="Áreas y Perímetros por Lote" IsChecked="True" Margin="0,5"/>
+                    <CheckBox x:Name="chkExpAngles" Content="Ángulos Internos" Margin="0,5"/>
+
+                    <Separator Margin="0,10"/>
+                    <Button x:Name="btnExportCSV" Content="💾 Generar CSV" Click="BtnExportCSV_Click" Height="40" FontSize="14"/>
+                    <TextBlock x:Name="txtExportStatus" Text="" Foreground="Green" Margin="0,5,0,0" FontStyle="Italic"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
+        <StatusBar Grid.Row="1" Margin="0,10,0,0">
+            <StatusBarItem>
+                <TextBlock x:Name="txtStatus" Text="Listo. Seleccione un polígono cerrado para comenzar."/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

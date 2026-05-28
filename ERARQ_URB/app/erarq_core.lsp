@@ -1,0 +1,22 @@
+(vl-load-com)
+
+(defun erarq:parcel-summary-command ()
+  (erarq:start-undo)
+  (erarq:parcel-tech-table)
+  (erarq:end-undo)
+  (princ)
+)
+
+(defun erarq:coords-table-command ()
+  (erarq:start-undo)
+  (erarq:table-coordinates)
+  (erarq:end-undo)
+  (princ)
+)
+
+(defun erarq:areas-table-command ()
+  (erarq:start-undo)
+  (erarq:table-areas)
+  (erarq:end-undo)
+  (princ)
+)
